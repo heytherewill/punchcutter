@@ -3,6 +3,8 @@ project(punchcutter C)
 
 set(CMAKE_C_STANDARD 11)
 
+find_package(cmark REQUIRED)
+
 add_executable(punchcutter main.c
     utils/array.c
     utils/string.c
@@ -17,3 +19,5 @@ add_executable(punchcutter main.c
     command/scanner.c
     command/scanner.h
 )
+
+target_link_libraries(punchcutter PRIVATE cmark::cmark)

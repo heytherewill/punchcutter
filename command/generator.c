@@ -1,6 +1,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include <cmark.h>
 #include <stdio.h>
 #include "node.h"
 #include "../utils/utils.h"
@@ -13,13 +14,19 @@ static long getFileSize(FILE *filePointer) {
     return size;
 }
 
-static char *readContentsOfFile(char *path) {
+static char *readContentsOfFileWithOffset(char *path, long startingIndex) {
     FILE* filePointer = fopen(path, "r");
     const long size = getFileSize(filePointer);
-    char *fileContents = malloc(size * sizeof(char));
-    fread(fileContents, sizeof(char), size, filePointer);
+    fseek(filePointer, startingIndex, SEEK_SET);
+    const long bytesToRead = size - startingIndex;
+    char *fileContents = malloc(bytesToRead * sizeof(char));
+    fread(fileContents, sizeof(char), bytesToRead, filePointer);
     fclose(filePointer);
     return fileContents;
+}
+
+static char *readContentsOfFile(char *path) {
+    return readContentsOfFileWithOffset(path, 0);
 }
 
 static char *listItemForNode(
@@ -70,7 +77,7 @@ static char *generateNavForNodes(
     return result;
 }
 
-static void writeToDirectory(
+static void writeToDirectory( // NOLINT(*-no-recursion)
     char *template,
     char *outputDirectory,
     Node node,
@@ -118,9 +125,10 @@ static void writeToDirectory(
             );
         }
     } else {
-        char *markdown = readContentsOfFile(node.filePath);
+        char *markdown = readContentsOfFileWithOffset(node.filePath, node.file.frontMatterEndIndex);
+        unsigned long markdownLength = strlen(markdown);
         char *outputPath = concatenate(concatenate(outputDirectory, node.path), ".html");
-        char *content = markdown; //TODO: Actually parse markdown here;
+        char *content = cmark_markdown_to_html(markdown, markdownLength, 0);
 
         const bool includeGrandParents = numberOfGrandparents > 0;
         const bool includeParents = numberOfParents > 0;

@@ -4,6 +4,8 @@
 #include "node.h"
 #include "../utils/utils.h"
 
+#define charactersInYamlFrontMatterDelimiter 3
+
 static char *extractValueForKey(char *metadataEntry, char *searchKey) {
 
     const int keyLength = strlen(searchKey); // NOLINT(*-narrowing-conversions)
@@ -44,7 +46,7 @@ static FileMetadata readMetadataFromFile(const char *filePath) {
         if (characterBeingParsed == '-') {
             chainingDashes = true;
             numberOfDashesFoundInARow += 1;
-            if (numberOfDashesFoundInARow == 3) {
+            if (numberOfDashesFoundInARow == charactersInYamlFrontMatterDelimiter) {
                 if (beginningDelimiterFound) {
                     endDelimiterFound = true;
                 } else {
@@ -92,14 +94,15 @@ static FileMetadata readMetadataFromFile(const char *filePath) {
     } while (!endDelimiterFound && (title == NULL || emoji == NULL));
 
     const FileMetadata info = {
-            coalesceNull(title, ""),
-            coalesceNull(emoji, "👋🏽"),
+        coalesceNull(title, ""),
+        coalesceNull(emoji, "👋🏽"),
+        i + charactersInYamlFrontMatterDelimiter
     };
 
     return info;
 }
 
-static Node recursiveScan(char *path) {
+static Node recursiveScan(char *path) { // NOLINT(*-no-recursion)
     if (isDirectory(path)) {
         int numberOfChildren = 0;
         Node *children = malloc(1000 * sizeof(Node));

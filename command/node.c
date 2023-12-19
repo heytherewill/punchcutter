@@ -2,7 +2,7 @@
 #include "../utils/utils.h"
 
 Node directoryNode(char *filePath, char *path, DirectoryMetadata directory) {
-    const Node result = { true, filePath, path, NULL, NULL, directory };
+    const Node result = { true, filePath, path, NULL, NULL, -1, directory };
     return result;
 }
 

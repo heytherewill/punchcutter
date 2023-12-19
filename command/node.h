@@ -7,6 +7,7 @@
 typedef struct FileMetadata {
     char *title;
     char *emoji;
+    long frontMatterEndIndex;
 } FileMetadata;
 
 typedef struct DirectoryMetadata {
