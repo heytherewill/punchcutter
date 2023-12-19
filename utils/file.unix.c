@@ -17,21 +17,11 @@ bool isDirectory(char *path) {
     return false;
 }
 
-char *getFileName(char *path) {
-    return strdup(basename(path));
-}
-
 void createDirectoryIfNeeded(const char *directory) {
     struct stat st = { 0 };
     if (stat(directory, &st) == -1) {
         mkdir(directory, 0700);
     }
-}
-
-char *removeFileExtension(char *fileName) {
-    const int indexOfLastDot = strrchr(fileName, '.') - fileName; // NOLINT(*-narrowing-conversions)
-    char *result = substring(fileName, 0, indexOfLastDot);
-    return result;
 }
 
 #endif

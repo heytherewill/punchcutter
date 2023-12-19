@@ -1,9 +1,26 @@
 #include <sys/fcntl.h>
-#include <libc.h>
 #include <stdbool.h>
+#include <libgen.h>
+#include "utils.h"
+
+#ifndef _WIN32
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+#endif
 
 static bool fileExists(const char *path) {
     return access(path, F_OK) == 0;
+}
+
+char *removeFileExtension(char *fileName) {
+    const int indexOfLastDot = strrchr(fileName, '.') - fileName; // NOLINT(*-narrowing-conversions)
+    char *result = substring(fileName, 0, indexOfLastDot);
+    return result;
+}
+
+char *getFileName(char *path) {
+    return strdup(basename(path));
 }
 
 void copyFile(const char *fromPath, const char *toPath) {

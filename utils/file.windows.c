@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/stat.h>
 
 bool isDirectory(char *path) {
     DWORD attributes = GetFileAttributesA(path);
@@ -12,4 +13,12 @@ bool isDirectory(char *path) {
 
     return false;
 }
+
+void createDirectoryIfNeeded(const char *directory) {
+    struct stat st = { 0 };
+    if (stat(directory, &st) == -1) {
+        mkdir(directory);
+    }
+}
+
 #endif

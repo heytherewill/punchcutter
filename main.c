@@ -30,11 +30,12 @@ int main(int argc, char *argv[]) {
     const bool shouldWatch = contains(argv, argc, "--watch");
 
     if (!shouldWatch) {
-        createDirectoryIfNeeded(outputDirectory);
+        char *actualOutputDirectory = ensurePathIsCorrect(outputDirectory);
+        createDirectoryIfNeeded(actualOutputDirectory);
         const Node rootNode = scan(directoryToScan);
-        generateFiles(rootNode, outputDirectory, includesDirectory, templateFilePath);
+        generateFiles(rootNode, actualOutputDirectory, includesDirectory, templateFilePath);
         freeNode(rootNode);
-        printf("Files generated at %s.\n", outputDirectory);
+        printf("Files generated at %s.\n", actualOutputDirectory);
     } else {
         printf("Watching is not implemented yet.\n");
         return -1;
