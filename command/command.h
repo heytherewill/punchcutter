@@ -1,6 +1,4 @@
-#ifndef PunchcutterNodeHeader
-#define PunchcutterNodeHeader
-
+#ifndef PunchcutterCommandHeader
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -29,4 +27,19 @@ Node fileNode(char *filePath, char *path, FileMetadata file);
 char *nodeTitle(Node node);
 void freeNode(Node node);
 
+Node scan(char *directoryToScan);
+
+void generateFiles(
+    char *directoryToScan,
+    char *outputDirectory,
+    char *includesDirectory,
+    char *templateFile
+);
+
+void watch(
+    char *directoryToWatch,
+    char *outputDirectory,
+    char *includesDirectory,
+    char *templateFile
+);
 #endif

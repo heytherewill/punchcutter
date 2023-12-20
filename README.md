@@ -22,6 +22,8 @@ The currently supported replacements for the template are:
 
 On top of generating these, punchcutter will also recursively copy every file inside the `includes` directory provided. This is useful for images, stylesheets, static pages and the like.
 
+When working on the actual website, calling punchcutter with `--watch` as the last parameter will make it observe the scan directory for file changes and regenerate website accordingly.
+
 # Building
 
 ```

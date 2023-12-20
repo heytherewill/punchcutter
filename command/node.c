@@ -1,4 +1,4 @@
-#include "node.h"
+#include "command.h"
 #include "../utils/utils.h"
 
 Node directoryNode(char *filePath, char *path, DirectoryMetadata directory) {
@@ -30,7 +30,7 @@ char *nodeTitle(Node node) {
     return "";
 }
 
-void freeNode(Node node) {
+void freeNode(Node node) { // NOLINT(*-no-recursion)
     if (node.isDirectory) {
         for (int i = 0; i < node.directory.numberOfChildren; ++i) {
             freeNode(node.directory.children[i]);

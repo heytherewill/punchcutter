@@ -1,3 +1,6 @@
 [submodule "cmark"]
 	path = cmark
 	url = https://github.com/commonmark/cmark.git
+[submodule "dmon"]
+	path = dmon
+	url = https://github.com/septag/dmon.git

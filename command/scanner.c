@@ -1,7 +1,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
-#include "node.h"
+#include "command.h"
 #include "../utils/utils.h"
 
 #define charactersInYamlFrontMatterDelimiter 3

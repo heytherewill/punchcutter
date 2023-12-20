@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "utils/utils.h"
-#include "command/scanner.h"
-#include "command/node.h"
-#include "command/generator.h"
+#include "command/command.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 5) {
@@ -13,11 +11,10 @@ int main(int argc, char *argv[]) {
             "  0: The directory to scan for .md files.\n"
             "  1: The directory where Punchcutter will output the .html files.\n"
             "  2: The path to the template .html file.\n"
-            "  3: A path containing other files that will be copied in the output directory.\n";
-//            TODO: Uncomment once watching is implemented.
-//            "You can also optionally supply --watch as the 5th argument to regenerate the files\n"
-//            "as you edit the output directory. This is useful for development mode so you can\n"
-//            "see what each page looks like without re-running the command.\n";
+            "  3: A path containing other files that will be copied in the output directory.\n"
+            "You can also optionally supply --watch as the 5th argument to regenerate the files\n"
+            "as you edit the output directory. This is useful for development mode so you can\n"
+            "see what each page looks like without re-running the generation command.\n";
 
         printf("%s", helpMessage);
         return argc > 1 && equals(argv[1], "--watch") ? 0 : 1;
@@ -28,16 +25,14 @@ int main(int argc, char *argv[]) {
     char *templateFilePath = argv[3];
     char *includesDirectory = argv[4];
     const bool shouldWatch = contains(argv, argc, "--watch");
+    char *actualOutputDirectory = ensurePathIsCorrect(outputDirectory);
+    createDirectoryIfNeeded(actualOutputDirectory);
 
     if (!shouldWatch) {
-        char *actualOutputDirectory = ensurePathIsCorrect(outputDirectory);
-        createDirectoryIfNeeded(actualOutputDirectory);
-        const Node rootNode = scan(directoryToScan);
-        generateFiles(rootNode, actualOutputDirectory, includesDirectory, templateFilePath);
-        freeNode(rootNode);
-        printf("Files generated at %s.\n", actualOutputDirectory);
+        generateFiles(directoryToScan, actualOutputDirectory, includesDirectory, templateFilePath);
     } else {
-        printf("Watching is not implemented yet.\n");
-        return -1;
+        watch(directoryToScan, actualOutputDirectory, includesDirectory, templateFilePath);
     }
+
+    return 0;
 }

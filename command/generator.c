@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <cmark.h>
 #include <stdio.h>
-#include "node.h"
+#include "command.h"
 #include "../utils/utils.h"
 
 static long getFileSize(FILE *filePointer) {
@@ -214,11 +214,12 @@ static void recursivelyCopyContentsOf(char *includesDirectory, char *outputDirec
 }
 
 void generateFiles(
-    Node rootNode,
+    char *directoryToScan,
     char *outputDirectory,
     char *includesDirectory,
     char *templateFile
 ) {
+    const Node rootNode = scan(directoryToScan);
     char *template = readContentsOfFile(templateFile);
 
     printf("Generating files.\n");
@@ -240,5 +241,6 @@ void generateFiles(
     );
 
     recursivelyCopyContentsOf(includesDirectory, outputDirectory);
+    printf("Files generated at %s.\n", outputDirectory);
     free(template);
 }
