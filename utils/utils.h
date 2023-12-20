@@ -1,6 +1,7 @@
 #ifndef PunchcutterUtilsHeader
 #define PunchcutterUtilsHeader
 
+#include "string.h"
 #include <stdbool.h>
 
 // Array
@@ -19,7 +20,7 @@ void copyFile(const char *fromPath, const char *toPath);
 #define pathSeparator "/"
 #endif
 
-#define ensurePathIsCorrect(path) (endsWith(path, pathSeparator) ? path : concatenate(path, pathSeparator))
+#define ensurePathIsCorrect(path) (endsWith(path, pathSeparator) ? strdup(path) : concatenate(path, pathSeparator))
 #define isSkippableFileEntry(name) (equals(name, ".DS_Store") || equals(name, ".") || equals(name, ".."))
 
 // String

@@ -187,15 +187,14 @@ static void writeToDirectory( // NOLINT(*-no-recursion)
     }
 }
 
-static void recursivelyCopyContentsOf(char *includesDirectory, char *outputDirectory) {
-    const char *correctIncludesDirectory = ensurePathIsCorrect(includesDirectory);
-    const char *correctOutputDirectory = ensurePathIsCorrect(outputDirectory);
+static void recursivelyCopyContentsOf(char *includesDirectory, char *outputDirectory) { // NOLINT(*-no-recursion)
+    char *correctIncludesDirectory = ensurePathIsCorrect(includesDirectory);
+    char *correctOutputDirectory = ensurePathIsCorrect(outputDirectory);
     createDirectoryIfNeeded(correctOutputDirectory);
 
     DIR *includesDir = opendir(correctIncludesDirectory);
     struct dirent *fileSystemEntryPointer;
     readAllFilesInPath(fileSystemEntryPointer, includesDir) {
-
         const char *entryName = fileSystemEntryPointer->d_name;
         if (isSkippableFileEntry(entryName)) {
             continue;
@@ -208,9 +207,14 @@ static void recursivelyCopyContentsOf(char *includesDirectory, char *outputDirec
         } else {
             copyFile(originPath, destinationPath);
         }
+
+        free(originPath);
+        free(destinationPath);
     }
 
     closedir(includesDir);
+    free(correctIncludesDirectory);
+    free(correctOutputDirectory);
 }
 
 void generateFiles(
@@ -243,4 +247,5 @@ void generateFiles(
     recursivelyCopyContentsOf(includesDirectory, outputDirectory);
     printf("Files generated at %s.\n", outputDirectory);
     free(template);
+    freeNode(rootNode);
 }

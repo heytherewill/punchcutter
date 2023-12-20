@@ -93,12 +93,14 @@ static FileMetadata readMetadataFromFile(const char *filePath) {
 
     } while (!endDelimiterFound && (title == NULL || emoji == NULL));
 
+
     const FileMetadata info = {
         coalesceNull(title, ""),
         coalesceNull(emoji, "👋🏽"),
         i + charactersInYamlFrontMatterDelimiter
     };
 
+    fclose(filePointer);
     return info;
 }
 
